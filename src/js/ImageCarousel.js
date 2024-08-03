@@ -11,6 +11,9 @@ export default class ImageCarousel {
         this.options = Object.assign({}, options, defaultOptions);  
     }
 
+    get selectedImageUrl() {
+        return this.images[this.selectedImageIndex];
+    }
 
     addImage(image) {
         this.images.push(image);
@@ -23,10 +26,20 @@ export default class ImageCarousel {
 
     nextImage() {
         this.selectedImageIndex += 1;
+
+        // Loop to lowest index
+        if(this.selectedImageIndex > this.images.length - 1) {
+            this.selectedImageIndex = 0;
+        }
     }
 
     previousImage() {
         this.selectedImageIndex -= 1;
+
+        // Loop to highest index
+        if(this.selectedImageIndex < 0) {
+            this.selectedImageIndex = this.images.length - 1;
+        }
     }
 
     
