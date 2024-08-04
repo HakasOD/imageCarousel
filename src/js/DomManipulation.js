@@ -1,4 +1,5 @@
 import ImageCarousel from "./ImageCarousel";
+import "../css/imageCarousel.css";
 
 //TODO: Add dot navigation things
 

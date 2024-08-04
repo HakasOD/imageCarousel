@@ -1,3 +1,4 @@
 .hide-visability {
     visibility: hidden;
+    position: absolute;
 }
