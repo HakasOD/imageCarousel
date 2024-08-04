@@ -1,13 +1,15 @@
 export default class ImageCarousel {
-    defaultOptions = {
-        height: 600,
-        width: 800,
-        autoSlide: true,
-    }
 
     constructor(images, options) {
         this.images = images;
         this.selectedImageIndex = 0;
+
+        const defaultOptions = {
+            height: 600,
+            width: 800,
+            autoSlide: true,
+        }
+
         this.options = Object.assign({}, options, defaultOptions);  
     }
 
