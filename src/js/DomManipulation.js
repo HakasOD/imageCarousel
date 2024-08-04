@@ -6,10 +6,11 @@ import ImageCarousel from "./ImageCarousel";
  * Controls the dom for an image carousel
  */
 export default class DomManipulation {
-    constructor(container, images, options) {
+    constructor(container, images, options = {}) {
         this.container = container;
         this.carousel = new ImageCarousel(images, options);
 
+        this.init();
     }
 
     /**
@@ -17,6 +18,10 @@ export default class DomManipulation {
      */
     init() {
         this.render();
+
+        const imagesDiv = this.container.querySelector(".images");
+        this.loadImages(imagesDiv, this.carousel.images);
+        
         this.attachOnClickListeners();
         this.updateDisplayingImage(); 
     }
@@ -59,18 +64,18 @@ export default class DomManipulation {
      * Updates current image to be the next one.
      */
     onNextBtnClick() {
+        this.toggleImageVisability(this.carousel.selectedImageIndex);
         this.carousel.nextImage();
         this.updateDisplayingImage();
-        this.preloadImage(this.carousel.selectedImageIndex + 1);
     }
 
     /**
      * Updates current image to previous one.
      */
     onPreviousBtnClick() {
+        this.toggleImageVisability(this.carousel.selectedImageIndex);
         this.carousel.previousImage();
         this.updateDisplayingImage();
-        this.preloadImage(this.carousel.selectedImageIndex - 1);
     }
 
     /**
@@ -78,32 +83,46 @@ export default class DomManipulation {
      * the carousel.
      */
     updateDisplayingImage() {
-        const displayingImage = new Image(this.carousel.selectedImageUrl);
-        const imagesDiv = this.container.querySelector(".images");
-
-        imagesDiv.appendChild(displayingImage);
+        let selectedImageIndex = this.carousel.selectedImageIndex;
+        
+        this.toggleImageVisability(selectedImageIndex)
     }
 
-    /**
-     * Preloads an image at an the index 
-     * @param {number} index 
-     */
-   preloadImage(index) {
+   /**
+    * Creates Image elements and appends them to parentElement 
+    * @param {HTMLDivElement} parentElement 
+    * @param {Array} images 
+    */
+   loadImages(parentElement, images) {
+        for(let imageUrl of images) {
+            const image = this.createImage(imageUrl);
 
-        // Allow for looping
-        let validIndex = index;
-        let carouselLength = this.carousel.images.length;
+            image.classList.add("hide-visability");
 
-        if(index < 0) {
-            validIndex = carouselLength - 1;
+            parentElement.appendChild(image);
         }
-        else if(index > carouselLength - 1) {
-            validIndex = 0;
-        }
+   }
 
-        // Load image
-        const image = new Image();
-        image.src = this.carousel.images[validIndex];
-   } 
+   /**
+    * Returns a Image element with src imgSrc 
+    * @param {String} imgSrc 
+    * @returns Image element 
+    */
+   createImage(imgSrc) {
+        let image = new Image();
+        image.src = imgSrc;
 
+        return image;
+   }
+
+   /**
+    * Toggles visability of image at index
+    * @param {number} index 
+    */
+   toggleImageVisability(index) {
+        const imagesContainer = this.container.querySelector('.images');
+        const image = imagesContainer.children[index];
+
+        image.classList.toggle("hide-visability");
+   }
 }
